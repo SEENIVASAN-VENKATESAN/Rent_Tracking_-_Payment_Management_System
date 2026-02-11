@@ -1,13 +1,21 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rent")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class Rent {
 
     @Id
@@ -16,6 +24,7 @@ public class Rent {
 
     @ManyToOne
     @JoinColumn(name = "allocation_id")
+
     private UnitAllocation allocation; // tenant allocation
 
     private Double amount;           // monthly rent amount

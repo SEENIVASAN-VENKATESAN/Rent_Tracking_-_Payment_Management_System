@@ -1,13 +1,21 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "unit_allocation")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
 public class UnitAllocation {
 
     @Id
@@ -31,5 +39,7 @@ public class UnitAllocation {
     private String status;          // ACTIVE / ENDED
 
     private LocalDateTime createdAt;// allocation created time
+
+
 }
 
