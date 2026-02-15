@@ -6,12 +6,20 @@ import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
 import com.RenterzPaizza.RenterzPaizza.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
 
     @Autowired
     private UserRepository userRepository;
@@ -43,16 +51,17 @@ public class AuthController {
     @PostMapping("/login")
     public String login(@RequestBody LoginRequest request) {
 
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        String token = jwtUtil.generateToken(user.getEmail());
-
-        return token;
+        return jwtUtil.generateToken(userDetails);
     }
+
 
 }
