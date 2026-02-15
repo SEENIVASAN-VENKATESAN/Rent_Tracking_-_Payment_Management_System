@@ -1,8 +1,10 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 
+import com.RenterzPaizza.RenterzPaizza.dto.LoginRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
+import com.RenterzPaizza.RenterzPaizza.security.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,9 @@ public class AuthController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
@@ -34,4 +39,20 @@ public class AuthController {
         userRepository.save(user);
         return "User registered successfully";
     }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest request) {
+
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Invalid email"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+
+        String token = jwtUtil.generateToken(user.getEmail());
+
+        return token;
+    }
+
 }
