@@ -1,11 +1,12 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.CommunicationChannel;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.CommunicationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.persistence.Id;
 
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "communication")
 @AllArgsConstructor
@@ -17,19 +18,22 @@ public class Communication {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long communicationId;   // primary key
+    private Long communicationId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;              // user to whom message is sent
+    private User user;
 
-    private String channel;         // SMS / EMAIL / VOICE / WHATSAPP
+    @Enumerated(EnumType.STRING)
+    private CommunicationChannel channel;
 
-    private String templateName;    // RENT_DUE / PAYMENT_SUCCESS
+    private String templateName;
 
-    private String message;         // final message content
+    private String message;
 
-    private String status;          // SENT / FAILED
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private CommunicationStatus status = CommunicationStatus.PENDING;
 
-    private LocalDateTime createdAt;// when communication was created/sent
+    private LocalDateTime createdAt;
 }

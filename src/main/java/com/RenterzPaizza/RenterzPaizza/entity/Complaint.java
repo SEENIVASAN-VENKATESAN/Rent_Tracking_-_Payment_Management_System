@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+
+import com.RenterzPaizza.RenterzPaizza.entity.enums.DamageStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.persistence.Id;
@@ -31,7 +33,8 @@ public class Complaint {
     private String description; // complaint details
     private String title ;      //short complaint title
 
-    private String status;           // OPEN / IN_PROGRESS / CLOSED
+    @Enumerated(EnumType.STRING)
+    private DamageStatus status;           // OPEN / IN_PROGRESS / CLOSED
 
     private LocalDateTime createdAt;// complaint created time
 }

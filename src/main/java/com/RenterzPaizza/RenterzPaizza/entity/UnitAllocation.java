@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.EntityStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.OccupancyType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,15 +29,17 @@ public class UnitAllocation {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;              // owner / tenant
+    private User tenant;              // owner / tenant
 
-    private String allocationType;  // OWNER / TENANT / LEASE
+    @Enumerated(EnumType.STRING)
+    private OccupancyType occupancyType; //(RENT / LEASE) // OWNER / TENANT / LEASE
 
     private LocalDate startDate;    // allocation start
 
     private LocalDate endDate;      // allocation end
 
-    private String status;          // ACTIVE / ENDED
+    @Enumerated(EnumType.STRING)
+    private EntityStatus status;    //ACTIVE,INACTIVE,TERMINATED
 
     private LocalDateTime createdAt;// allocation created time
 

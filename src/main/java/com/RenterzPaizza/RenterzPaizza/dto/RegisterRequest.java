@@ -1,6 +1,5 @@
 package com.RenterzPaizza.RenterzPaizza.dto;
 
-import com.RenterzPaizza.RenterzPaizza.entity.Role;
 import lombok.*;
 
 @Getter

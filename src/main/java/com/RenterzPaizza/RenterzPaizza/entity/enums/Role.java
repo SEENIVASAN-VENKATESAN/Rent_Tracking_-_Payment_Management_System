@@ -1,4 +1,4 @@
-package com.RenterzPaizza.RenterzPaizza.entity;
+package com.RenterzPaizza.RenterzPaizza.entity.enums;
 
 public enum Role {
         ADMIN,

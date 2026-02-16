@@ -1,5 +1,6 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,9 @@ public class Rent {
 
     private LocalDate dueDate;       // rent due date
 
-    private String status;           // DUE / PAID / OVERDUE
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private BillingStatus status = BillingStatus.PENDING;   // DUE / PAID / OVERDUE
 
     private LocalDateTime createdAt; // rent generated time
 }

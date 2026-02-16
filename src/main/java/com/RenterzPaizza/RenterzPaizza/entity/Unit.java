@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,7 +23,8 @@ public class Unit {
 
     private String unitNumber;      // flat / room number
 
-    private String unitType;        // FLAT / ROOM / BED
+    @Enumerated(EnumType.STRING)
+    private UnitType unitType;      // FLAT / ROOM / BED
 
     private Integer floor;          // floor number
 
@@ -29,7 +32,13 @@ public class Unit {
     @JoinColumn(name = "property_id")
     private Property property;      // belongs to property
 
-    private String status;          // AVAILABLE / OCCUPIED / INACTIVE
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private UnitStatus status = UnitStatus.AVAILABLE;  // AVAILABLE / OCCUPIED / INACTIVE
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
 
     private LocalDateTime createdAt;// unit created time
 }

@@ -1,5 +1,6 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -28,7 +29,9 @@ public class Maintenance {
 
     private LocalDate dueDate;       // due date
 
-    private String status;           // DUE / PAID
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    private BillingStatus status = BillingStatus.PENDING;// DUE / PAID
 
     private LocalDateTime createdAt;// maintenance created time
 }

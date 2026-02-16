@@ -1,11 +1,10 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.PaymentMode;
 import jakarta.persistence.*;
 import lombok.*;
-
-
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "payment")
 @AllArgsConstructor
@@ -21,17 +20,30 @@ public class Payment {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;                 // who paid
+    private User user; // who paid
 
+    // 🔹 Rent payment
     @ManyToOne
-    @JoinColumn(name = "property_id")
-    private Property property;         // for which property
+    @JoinColumn(name = "rent_id", nullable = true)
+    private Rent rent;
 
-    private Double amount;             // paid amount
+    // 🔹 Maintenance payment
+    @ManyToOne
+    @JoinColumn(name = "maintenance_id", nullable = true)
+    private Maintenance maintenance;
 
-    private String paymentMode;        // UPI / CASH / CARD / NETBANKING
+    // 🔹 Damage payment (THIS IS WHAT YOU ASKED)
+    @ManyToOne
+    @JoinColumn(name = "damage_id", nullable = true)
+    private DamageReport damageReport;
 
-    private String paymentStatus;      // SUCCESS / FAILED / PENDING
+    private Double amount;
 
-    private LocalDateTime paymentDate; // when payment happened
+    @Enumerated(EnumType.STRING)
+    private PaymentMode paymentMode;
+
+    @Enumerated(EnumType.STRING)
+    private BillingStatus status;
+
+    private LocalDateTime paymentDate;
 }

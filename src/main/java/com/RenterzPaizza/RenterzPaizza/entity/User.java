@@ -1,5 +1,6 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import jakarta.persistence.EnumType;

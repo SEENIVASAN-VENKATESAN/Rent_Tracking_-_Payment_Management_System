@@ -3,7 +3,7 @@ package com.RenterzPaizza.RenterzPaizza.controller;
 import com.RenterzPaizza.RenterzPaizza.dto.AuthResponse;
 import com.RenterzPaizza.RenterzPaizza.dto.LoginRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
-import com.RenterzPaizza.RenterzPaizza.entity.Role;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
 import com.RenterzPaizza.RenterzPaizza.security.JwtUtil;

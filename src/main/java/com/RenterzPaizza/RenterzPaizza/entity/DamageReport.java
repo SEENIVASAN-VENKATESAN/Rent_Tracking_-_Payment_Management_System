@@ -1,5 +1,6 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.WorkFlowStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,7 +34,8 @@ public class DamageReport {
 
     private Double estimatedCost;    // damage cost
 
-    private String status;           // OPEN / PAID
+    @Enumerated(EnumType.STRING)
+    private WorkFlowStatus status; // OPEN / PAID
 
     private LocalDateTime createdAt;// report created time
 }

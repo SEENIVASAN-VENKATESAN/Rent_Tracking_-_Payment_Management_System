@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.enums.EntityStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.PropertyType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,11 +21,15 @@ public class Property {
 
     private String propertyName; // apartment / pg name
 
-    private String propertyType; // APARTMENT / PG / BUILDING
+    @Enumerated(EnumType.STRING)
+    private PropertyType propertyType; // APARTMENT / PG / BUILDING
 
     private String address; // full address
 
     private String city; // city name
+
+    @Enumerated(EnumType.STRING)
+    private EntityStatus status;
 
     @ManyToOne
     @JoinColumn(name = "admin_id") // property managed by admin
