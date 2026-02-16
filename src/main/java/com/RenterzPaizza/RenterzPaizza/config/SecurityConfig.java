@@ -1,5 +1,4 @@
 package com.RenterzPaizza.RenterzPaizza.config;
-
 import com.RenterzPaizza.RenterzPaizza.security.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +29,15 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+
+                        .requestMatchers("/auth/**").permitAll()
+
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+
+                        .requestMatchers("/owner/**").hasRole("OWNER")
+
+                        .requestMatchers("/tenant/**").hasRole("TENANT")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

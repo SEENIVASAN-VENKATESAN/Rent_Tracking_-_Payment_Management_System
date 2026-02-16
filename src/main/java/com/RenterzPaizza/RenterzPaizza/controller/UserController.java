@@ -1,9 +1,10 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
+import com.RenterzPaizza.RenterzPaizza.security.SecurityUtil;
 import com.RenterzPaizza.RenterzPaizza.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -20,4 +21,13 @@ public class UserController {
     public User getByEmail(@PathVariable String email) {
         return userService.findByEmail(email).orElseThrow();
     }
+
+    @GetMapping("/tenant/profile")
+    public String profile() {
+
+        String email = SecurityUtil.getCurrentUserEmail();
+
+        return "Logged user = " + email;
+    }
+
 }

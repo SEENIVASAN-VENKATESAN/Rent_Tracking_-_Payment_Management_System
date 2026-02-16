@@ -1,7 +1,9 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 
+import com.RenterzPaizza.RenterzPaizza.dto.AuthResponse;
 import com.RenterzPaizza.RenterzPaizza.dto.LoginRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
+import com.RenterzPaizza.RenterzPaizza.entity.Role;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
 import com.RenterzPaizza.RenterzPaizza.security.JwtUtil;
@@ -41,7 +43,8 @@ public class AuthController {
                 .name(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(request.getRole())
+                .role(Role.valueOf(request.getRole().toUpperCase()))
+
                 .build();
 
         userRepository.save(user);
@@ -49,7 +52,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) {
+    public AuthResponse login(@RequestBody LoginRequest request) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -59,8 +62,16 @@ public class AuthController {
         );
 
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User user = userRepository
+                .findByEmail(request.getEmail())
+                .orElseThrow();
 
-        return jwtUtil.generateToken(userDetails);
+        return new AuthResponse(
+                jwtUtil.generateToken(userDetails), // token
+                user.getEmail(),                    // email
+                user.getRole().name()                      // role
+        );
+
     }
 
 

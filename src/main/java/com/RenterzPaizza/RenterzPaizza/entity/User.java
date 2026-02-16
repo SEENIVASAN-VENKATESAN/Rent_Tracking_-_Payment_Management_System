@@ -2,6 +2,9 @@ package com.RenterzPaizza.RenterzPaizza.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+
 
 @Entity
 @Table(name = "users")   // stores all system users
@@ -10,7 +13,7 @@ import lombok.*;
 @Setter
 @Getter
 @Builder
-public class User {
+public class    User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment primary key
@@ -26,6 +29,7 @@ public class User {
 
         private String password; // encrypted password
 
-        private String role; // ADMIN, OWNER, TENANT
+        @Enumerated(EnumType.STRING)
+        private Role role; // ADMIN, OWNER, TENANT
 
     }
