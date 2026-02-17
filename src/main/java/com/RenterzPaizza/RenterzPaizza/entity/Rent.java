@@ -35,4 +35,6 @@ public class Rent {
     private BillingStatus status = BillingStatus.PENDING;   // DUE / PAID / OVERDUE
 
     private LocalDateTime createdAt; // rent generated time
+    private String billingMonth; // format: 2026-02
+
 }

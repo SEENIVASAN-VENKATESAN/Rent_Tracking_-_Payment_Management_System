@@ -14,7 +14,7 @@ import jakarta.persistence.Enumerated;
 @Setter
 @Getter
 @Builder
-public class    User {
+public class  User {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment primary key

@@ -38,13 +38,13 @@ public class AuthController {
         if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             return "Email already registered";
         }
-        System.out.println(request.getFullName());
+        System.out.println(request.getName());
         User user = User.builder()
-                .name(request.getFullName())
+                .name(request.getName())
                 .email(request.getEmail())
+                .mobile(request.getMobile())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.valueOf(request.getRole().toUpperCase()))
-
                 .build();
 
         userRepository.save(user);
@@ -69,7 +69,7 @@ public class AuthController {
         return new AuthResponse(
                 jwtUtil.generateToken(userDetails), // token
                 user.getEmail(),                    // email
-                user.getRole().name()                      // role
+                user.getRole().name()               // role
         );
 
     }

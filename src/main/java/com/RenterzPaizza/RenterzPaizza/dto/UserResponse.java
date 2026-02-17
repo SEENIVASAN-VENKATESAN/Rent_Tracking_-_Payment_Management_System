@@ -1,15 +1,13 @@
 package com.RenterzPaizza.RenterzPaizza.dto;
 
 import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Setter
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class UserResponse {
     private Long userId;
     private String name;

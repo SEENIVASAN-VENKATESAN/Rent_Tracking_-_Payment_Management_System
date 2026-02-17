@@ -1,23 +1,35 @@
 package com.RenterzPaizza.RenterzPaizza.mapper;
 
+import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.UserResponse;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class UserMapper {
 
-    // ENTITY → DTO
-    public static UserResponse toResponse(User user) {
+    // DTO → Entity (for register)
+    public User toEntity(RegisterRequest dto, PasswordEncoder encoder) {
 
-        if (user == null) return null;
+        return User.builder()
+                .name(dto.getName())
+                .email(dto.getEmail())
+                .mobile(dto.getMobile())
+                .password(encoder.encode(dto.getPassword()))
+                .role(dto.getRole())
+                .build();
+    }
 
-        UserResponse dto = new UserResponse();
+    // Entity → Response DTO
+    public UserResponse toResponse(User user) {
 
-        dto.setUserId(user.getUserId());
-        dto.setName(user.getName());
-        dto.setEmail(user.getEmail());
-        dto.setMobile(user.getMobile());
-        dto.setRole(user.getRole());
-
-        return dto;
+        return UserResponse.builder()
+                .userId(user.getUserId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .mobile(user.getMobile())
+                .role(user.getRole())
+                .build();
     }
 }

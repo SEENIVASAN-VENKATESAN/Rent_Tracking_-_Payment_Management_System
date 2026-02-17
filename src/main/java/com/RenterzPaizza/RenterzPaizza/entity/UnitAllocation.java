@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 
+import javax.management.relation.Relation;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,6 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @Builder
-
 public class UnitAllocation {
 
     @Id
@@ -42,6 +42,7 @@ public class UnitAllocation {
     private EntityStatus status;    //ACTIVE,INACTIVE,TERMINATED
 
     private LocalDateTime createdAt;// allocation created time
+
 
 
 }
