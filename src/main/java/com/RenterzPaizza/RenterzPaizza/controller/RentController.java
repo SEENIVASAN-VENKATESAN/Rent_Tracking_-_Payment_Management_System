@@ -15,8 +15,5 @@ public class RentController {
     @Autowired
     private RentService rentService;
 
-    @PostMapping
-    public Rent create(@RequestBody Rent rent) {
-        return rentService.createRent(rent);
-    }
+
 }

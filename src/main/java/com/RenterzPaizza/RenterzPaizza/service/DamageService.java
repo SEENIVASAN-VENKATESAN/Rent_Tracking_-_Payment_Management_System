@@ -10,8 +10,5 @@ public class DamageService {
     @Autowired
     private DamageRepository damageRepository;
 
-    public DamageReport record(DamageReport damage) {
-        damage.setStatus("PENDING");
-        return damageRepository.save(damage);
-    }
+
 }

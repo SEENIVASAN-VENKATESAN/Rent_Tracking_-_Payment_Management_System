@@ -10,8 +10,5 @@ public class RentService {
     @Autowired
     private RentRepository rentRepository;
 
-    public Rent createRent(Rent rent) {
-        rent.setStatus("PENDING");
-        return rentRepository.save(rent);
-    }
+
 }

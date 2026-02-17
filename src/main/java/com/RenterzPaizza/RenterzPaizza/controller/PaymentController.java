@@ -15,8 +15,5 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
-    @PostMapping
-    public Payment pay(@RequestBody Payment payment) {
-        return paymentService.recordPayment(payment);
-    }
+
 }

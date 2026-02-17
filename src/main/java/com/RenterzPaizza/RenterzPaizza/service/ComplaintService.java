@@ -10,8 +10,5 @@ public class ComplaintService {
     @Autowired
     private ComplaintRepository complaintRepository;
 
-    public Complaint raise(Complaint complaint) {
-        complaint.setStatus("OPEN");
-        return complaintRepository.save(complaint);
-    }
+
 }

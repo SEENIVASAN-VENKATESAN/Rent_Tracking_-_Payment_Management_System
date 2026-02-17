@@ -12,15 +12,5 @@ public class UnitAllocationService {
     @Autowired
     private UnitAllocationRepository allocationRepository;
 
-    public UnitAllocation allocate(UnitAllocation allocation) {
-        allocation.setStatus("ACTIVE");
-        return allocationRepository.save(allocation);
-    }
 
-    public void vacate(Long allocationId) {
-        UnitAllocation allocation = allocationRepository.findById(allocationId).orElseThrow();
-        allocation.setStatus("VACATED");
-        allocation.setEndDate(LocalDate.now());
-        allocationRepository.save(allocation);
-    }
 }

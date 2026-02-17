@@ -15,9 +15,6 @@ public class ComplaintController {
     @Autowired
     private ComplaintService complaintService;
 
-    @PostMapping
-    public Complaint raise(@RequestBody Complaint complaint) {
-        return complaintService.raise(complaint);
-    }
+
 }
 

@@ -12,13 +12,7 @@ public class UnitAllocationController {
     @Autowired
     private UnitAllocationService allocationService;
 
-    @PostMapping
-    public UnitAllocation allocate(@RequestBody UnitAllocation allocation) {
-        return allocationService.allocate(allocation);
-    }
 
-    @PutMapping("/{id}/vacate")
-    public void vacate(@PathVariable Long id) {
-        allocationService.vacate(id);
-    }
+
+
 }

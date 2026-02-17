@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 
+import com.RenterzPaizza.RenterzPaizza.dto.PropertyRequest;
+import com.RenterzPaizza.RenterzPaizza.dto.PropertyResponse;
 import com.RenterzPaizza.RenterzPaizza.entity.Property;
 import com.RenterzPaizza.RenterzPaizza.service.PropertyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +16,14 @@ public class PropertyController {
     @Autowired
     private PropertyService propertyService;
 
-    @PostMapping
-    public Property create(@RequestBody Property property) {
-        return propertyService.create(property);
+    @PostMapping("/create")
+    public PropertyResponse create(@RequestBody PropertyRequest request) {
+        return propertyService.create(request);
     }
 
-    @GetMapping("/admin/{adminId}")
-    public List<Property> byAdmin(@PathVariable Long adminId) {
-        return propertyService.getByAdmin(adminId);
+    @GetMapping("/{id}")
+    public PropertyResponse getById(@PathVariable Long id){
+        return propertyService.getById(id);
     }
+
 }

@@ -15,8 +15,5 @@ public class MaintenanceController {
     @Autowired
     private MaintenanceService maintenanceService;
 
-    @PostMapping
-    public Maintenance create(@RequestBody Maintenance maintenance) {
-        return maintenanceService.createMaintenance(maintenance);
-    }
+
 }

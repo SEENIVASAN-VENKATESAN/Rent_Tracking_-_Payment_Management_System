@@ -10,8 +10,4 @@ public class MaintenanceService {
     @Autowired
     private MaintenanceRepository maintenanceRepository;
 
-    public Maintenance createMaintenance(Maintenance maintenance) {
-        maintenance.setStatus("PENDING");
-        return maintenanceRepository.save(maintenance);
-    }
 }

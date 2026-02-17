@@ -1,5 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
+import com.RenterzPaizza.RenterzPaizza.dto.UserResponse;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
+import com.RenterzPaizza.RenterzPaizza.mapper.UserMapper;
 import com.RenterzPaizza.RenterzPaizza.security.SecurityUtil;
 import com.RenterzPaizza.RenterzPaizza.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +24,19 @@ public class UserController {
         return userService.findByEmail(email).orElseThrow();
     }
 
-    @GetMapping("/tenant/profile")
+     @GetMapping("/tenant/profile")
     public String profile() {
 
         String email = SecurityUtil.getCurrentUserEmail();
 
         return "Logged user = " + email;
+    }
+    @GetMapping("/{id}")
+    public UserResponse getUser(@PathVariable Long id){
+
+        User user = userService.getById(id);
+
+        return UserMapper.toResponse(user);
     }
 
 }
