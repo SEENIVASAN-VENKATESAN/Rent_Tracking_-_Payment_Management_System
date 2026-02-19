@@ -15,8 +15,5 @@ public class CommunicationController {
     @Autowired
     private CommunicationService communicationService;
 
-    @PostMapping
-    public Communication log(@RequestBody Communication communication) {
-        return communicationService.log(communication);
-    }
+
 }

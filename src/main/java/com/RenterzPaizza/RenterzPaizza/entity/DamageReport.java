@@ -35,8 +35,9 @@ public class DamageReport {
     private Double estimatedCost;    // damage cost
 
     @Enumerated(EnumType.STRING)
-    private WorkFlowStatus status; // OPEN / PAID
+    private WorkFlowStatus status;   // OPEN / PAID
 
-    private LocalDateTime createdAt;// report created time
+    private LocalDateTime createdAt; // report created time
+
 }
 

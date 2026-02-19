@@ -1,6 +1,7 @@
 package com.RenterzPaizza.RenterzPaizza.dto;
 
 import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitType;
 import lombok.Builder;
 import lombok.Data;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 public class UnitResponse {
     private Long unitId;
     private String unitNumber;
-    private String unitType;
+    private UnitType unitType;
     private Integer floor;
     private UnitStatus status;
     private Long propertyId;

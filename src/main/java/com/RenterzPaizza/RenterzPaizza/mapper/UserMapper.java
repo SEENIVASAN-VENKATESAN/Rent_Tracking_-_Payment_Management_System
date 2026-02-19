@@ -3,6 +3,7 @@ package com.RenterzPaizza.RenterzPaizza.mapper;
 import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.UserResponse;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ public class UserMapper {
                 .email(dto.getEmail())
                 .mobile(dto.getMobile())
                 .password(encoder.encode(dto.getPassword()))
-                .role(dto.getRole())
+                .role(Role.valueOf(dto.getRole()))
                 .build();
     }
 
