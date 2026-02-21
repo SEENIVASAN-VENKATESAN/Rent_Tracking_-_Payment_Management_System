@@ -1,78 +1,31 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 
+import com.RenterzPaizza.RenterzPaizza.common.ApiResponse;
 import com.RenterzPaizza.RenterzPaizza.dto.AuthResponse;
 import com.RenterzPaizza.RenterzPaizza.dto.LoginRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.RegisterRequest;
-import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
-import com.RenterzPaizza.RenterzPaizza.entity.User;
-import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
-import com.RenterzPaizza.RenterzPaizza.security.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.RenterzPaizza.RenterzPaizza.dto.UserResponse;
+import com.RenterzPaizza.RenterzPaizza.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public AuthController(AuthService authService) {
+        this.authService = authService;
+    }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequest request) {
-
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            return "Email already registered";
-        }
-        System.out.println(request.getName());
-        User user = User.builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .mobile(request.getMobile())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.valueOf(request.getRole().toUpperCase()))
-                .build();
-
-        userRepository.save(user);
-        return "User registered successfully";
+    public ApiResponse<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ApiResponse.ok("Tenant registered successfully", authService.registerTenant(request));
     }
 
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
-
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()
-                )
-        );
-
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        User user = userRepository
-                .findByEmail(request.getEmail())
-                .orElseThrow();
-
-        return new AuthResponse(
-                jwtUtil.generateToken(userDetails), // token
-                user.getEmail(),                    // email
-                user.getRole().name()               // role
-        );
-
+    public ApiResponse<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        return ApiResponse.ok("Login successful", authService.login(request));
     }
-
-
 }

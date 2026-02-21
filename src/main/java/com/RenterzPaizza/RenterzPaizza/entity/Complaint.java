@@ -1,40 +1,39 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
-
-import com.RenterzPaizza.RenterzPaizza.entity.enums.DamageStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.WorkFlowStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.Id;
-
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "complaint")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Complaint {
+public class Complaint extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long complaintId;        // primary key
+    private Long complaintId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;               // who raised complaint
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")
-    private Unit unit;               // related unit
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
 
-    private String description; // complaint details
-    private String title ;      //short complaint title
+    @Column(nullable = false)
+    private String description;
+
+    @Column(nullable = false)
+    private String title;
 
     @Enumerated(EnumType.STRING)
-    private DamageStatus status;           // OPEN / IN_PROGRESS / CLOSED
-
-    private LocalDateTime createdAt;// complaint created time
+    @Column(nullable = false)
+    @Builder.Default
+    private WorkFlowStatus status = WorkFlowStatus.OPEN;
 }

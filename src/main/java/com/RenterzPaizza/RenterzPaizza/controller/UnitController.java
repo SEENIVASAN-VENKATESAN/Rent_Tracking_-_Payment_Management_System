@@ -1,53 +1,48 @@
 package com.RenterzPaizza.RenterzPaizza.controller;
 
-import com.RenterzPaizza.RenterzPaizza.entity.Unit;
+import com.RenterzPaizza.RenterzPaizza.common.ApiResponse;
+import com.RenterzPaizza.RenterzPaizza.common.PageMapper;
+import com.RenterzPaizza.RenterzPaizza.common.PageResponse;
+import com.RenterzPaizza.RenterzPaizza.dto.UnitRequest;
+import com.RenterzPaizza.RenterzPaizza.dto.UnitResponse;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitStatus;
 import com.RenterzPaizza.RenterzPaizza.service.UnitService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/unit")
-
+@RequestMapping("/api/owner/units")
 public class UnitController {
 
-    @Autowired
-    UnitService unitService;
+    private final UnitService unitService;
 
-//    // CREATE
-//    @PostMapping
-//    public ResponseEntity<Unit> create(@RequestBody Unit unit) {
-//        return ResponseEntity.ok(unitService.create(unit));
-//    }
-//
-//    // GET ALL
-//    @GetMapping
-//    public ResponseEntity<List<Unit>> getAll() {
-//        return ResponseEntity.ok(unitService.getAll());
-//    }
-//
-//    // GET BY ID
-//    @GetMapping("/{id}")
-//    public ResponseEntity<Unit> getById(@PathVariable Long id) {
-//        return ResponseEntity.ok(unitService.getById(id));
-//    }
-//
-//    // UPDATE
-//    @PutMapping("/{id}")
-//    public ResponseEntity<Unit> update(
-//            @PathVariable Long id,
-//            @RequestBody Unit unit) {
-//
-//        return ResponseEntity.ok(unitService.update(id, unit));
-//    }
-//
-//    // DELETE
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<String> delete(@PathVariable Long id) {
-//        unitService.delete(id);
-//        return ResponseEntity.ok("Unit deleted");
-//    }
+    public UnitController(UnitService unitService) {
+        this.unitService = unitService;
+    }
+
+    @PostMapping
+    public ApiResponse<UnitResponse> create(@Valid @RequestBody UnitRequest request) {
+        return ApiResponse.ok("Unit created", unitService.create(request));
+    }
+
+    @GetMapping
+    public ApiResponse<PageResponse<UnitResponse>> list(@RequestParam(required = false) UnitStatus status,
+                                                        Pageable pageable) {
+        Page<UnitResponse> page = unitService.listOwnerUnits(status, pageable);
+        return ApiResponse.ok("Units fetched", PageMapper.toPageResponse(page));
+    }
+
+    @PutMapping("/{unitId}")
+    public ApiResponse<UnitResponse> update(@PathVariable Long unitId,
+                                            @Valid @RequestBody UnitRequest request) {
+        return ApiResponse.ok("Unit updated", unitService.update(unitId, request));
+    }
+
+    @DeleteMapping("/{unitId}")
+    public ApiResponse<Void> delete(@PathVariable Long unitId) {
+        unitService.softDelete(unitId);
+        return ApiResponse.ok("Unit deleted");
+    }
 }

@@ -2,13 +2,13 @@ package com.RenterzPaizza.RenterzPaizza.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -22,31 +22,30 @@ public class JwtUtil {
     private long expiration;
 
     private SecretKey getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // 🔹 Generate Token
     public String generateToken(UserDetails userDetails) {
+        Date now = new Date();
+        Date expiresAt = new Date(now.getTime() + expiration);
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .subject(userDetails.getUsername())
+                .issuedAt(now)
+                .expiration(expiresAt)
+                .signWith(getSigningKey())
                 .compact();
     }
-    // 🔹 Extract Username
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // 🔹 Validate Token
     public boolean validateToken(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername())
-                && !isTokenExpired(token);
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
     }
 
-    // 🔹 Token Expiry Check
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
@@ -55,17 +54,12 @@ public class JwtUtil {
         return extractClaim(token, Claims::getExpiration);
     }
 
-    // 🔹 Extract Claims
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = extractAllClaims(token);
-        return claimsResolver.apply(claims);
-    }
-
-    private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        Claims claims = Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token)
-                .getBody();
+                .parseSignedClaims(token)
+                .getPayload();
+        return claimsResolver.apply(claims);
     }
 }

@@ -1,49 +1,54 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.PaymentMode;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "payment")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Payment {
+public class Payment extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long paymentId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user; // who paid
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    // 🔹 Rent payment
-    @ManyToOne
-    @JoinColumn(name = "rent_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "rent_id")
     private Rent rent;
 
-    // 🔹 Maintenance payment
-    @ManyToOne
-    @JoinColumn(name = "maintenance_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maintenance_id")
     private Maintenance maintenance;
 
-    // 🔹 Damage payment (THIS IS WHAT YOU ASKED)
-    @ManyToOne
-    @JoinColumn(name = "damage_id", nullable = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "damage_id")
     private DamageReport damageReport;
 
-    private Double amount;
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PaymentMode paymentMode;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private BillingStatus status;
 
+    @Column(nullable = false)
     private LocalDateTime paymentDate;
 }

@@ -1,44 +1,49 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitStatus;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.UnitType;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "unit")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Unit {
+public class Unit extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long unitId;            // primary key
+    private Long unitId;
 
-    private String unitNumber;      // flat / room number
+    @Column(nullable = false)
+    private String unitNumber;
 
     @Enumerated(EnumType.STRING)
-    private UnitType unitType;      // FLAT / ROOM / BED
+    @Column(nullable = false)
+    private UnitType unitType;
 
-    private Integer floor;          // floor number
+    @Column(nullable = false)
+    private Integer floor;
 
-    @ManyToOne
-    @JoinColumn(name = "property_id")
-    private Property property;      // belongs to property
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal monthlyRent;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "property_id", nullable = false)
+    private Property property;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     @Builder.Default
-    @Enumerated(EnumType.STRING)
-    private UnitStatus status = UnitStatus.AVAILABLE;  // AVAILABLE / OCCUPIED / INACTIVE
+    private UnitStatus status = UnitStatus.AVAILABLE;
 
-    @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
-
-    private LocalDateTime createdAt;// unit created time
 }

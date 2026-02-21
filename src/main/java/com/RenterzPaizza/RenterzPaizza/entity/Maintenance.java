@@ -1,38 +1,41 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "maintenance")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Maintenance {
+public class Maintenance extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long maintenanceId;      // primary key
+    private Long maintenanceId;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")
-    private Unit unit;               // maintenance for unit
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
 
-    private Double amount;           // maintenance amount
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal amount;
 
-    private LocalDate dueDate;       // due date
+    @Column(nullable = false)
+    private LocalDate dueDate;
 
-    @Builder.Default
+    @Column(nullable = false)
+    private String title;
+
     @Enumerated(EnumType.STRING)
-    private BillingStatus status = BillingStatus.PENDING;// DUE / PAID
-
-    private LocalDateTime createdAt;// maintenance created time
+    @Column(nullable = false)
+    @Builder.Default
+    private BillingStatus status = BillingStatus.DUE;
 }
-

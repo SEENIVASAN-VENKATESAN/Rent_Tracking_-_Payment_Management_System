@@ -1,12 +1,13 @@
 package com.RenterzPaizza.RenterzPaizza.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
-@Data
+@Getter
+@Builder
 @AllArgsConstructor
 public class AuthResponse {
-
     private String token;
     private String email;
     private String role;

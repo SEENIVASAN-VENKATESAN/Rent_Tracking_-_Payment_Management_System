@@ -2,32 +2,39 @@ package com.RenterzPaizza.RenterzPaizza.security;
 
 import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public CustomUserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
-    public UserDetails loadUserByUsername(String email)
-            throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmailAndDeletedFalse(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // 1️⃣ Fetch user from DB using email
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found"));
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
 
-        // 2️⃣ Convert your User entity into Spring Security User
-        return org.springframework.security.core.userdetails.User
-                .withUsername(user.getEmail())          // username (email)
-                .password(user.getPassword())           // encrypted password
-                .roles(user.getRole().name())           // ROLE name as STRING
-                .build();
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.getActive(),
+                true,
+                true,
+                true,
+                authorities
+        );
     }
 }

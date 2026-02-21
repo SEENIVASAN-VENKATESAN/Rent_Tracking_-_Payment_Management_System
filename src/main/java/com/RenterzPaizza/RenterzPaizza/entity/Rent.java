@@ -1,40 +1,41 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.BillingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "rent")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Rent {
+public class Rent extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rentId;             // primary key
+    private Long rentId;
 
-    @ManyToOne
-    @JoinColumn(name = "allocation_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "allocation_id", nullable = false)
+    private UnitAllocation allocation;
 
-    private UnitAllocation allocation; // tenant allocation
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal amount;
 
-    private Double amount;           // monthly rent amount
+    @Column(nullable = false)
+    private LocalDate dueDate;
 
-    private LocalDate dueDate;       // rent due date
-
-    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private BillingStatus status = BillingStatus.PENDING;   // DUE / PAID / OVERDUE
+    @Column(nullable = false)
+    @Builder.Default
+    private BillingStatus status = BillingStatus.DUE;
 
-    private LocalDateTime createdAt; // rent generated time
-    private String billingMonth; // format: 2026-02
-
+    @Column(nullable = false)
+    private String billingMonth;
 }

@@ -17,6 +17,7 @@ public class CommunicationRouter {
         if (user.getMobile() != null && !user.getMobile().isBlank()) {
 
             channels.add(CommunicationChannel.SMS);
+            channels.add(CommunicationChannel.WHATSAPP);
 
             // VOICE mandatory
             channels.add(CommunicationChannel.VOICE);

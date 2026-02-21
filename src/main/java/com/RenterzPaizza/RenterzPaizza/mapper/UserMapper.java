@@ -10,27 +10,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    // DTO → Entity (for register)
-    public User toEntity(RegisterRequest dto, PasswordEncoder encoder) {
-
+    public User toTenantEntity(RegisterRequest request, PasswordEncoder passwordEncoder) {
         return User.builder()
-                .name(dto.getName())
-                .email(dto.getEmail())
-                .mobile(dto.getMobile())
-                .password(encoder.encode(dto.getPassword()))
-                .role(Role.valueOf(dto.getRole()))
+                .name(request.getName())
+                .email(request.getEmail().toLowerCase())
+                .mobile(request.getMobile())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .profileImageUrl(request.getProfileImageUrl())
+                .role(Role.TENANT)
+                .active(true)
                 .build();
     }
 
-    // Entity → Response DTO
     public UserResponse toResponse(User user) {
-
         return UserResponse.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .mobile(user.getMobile())
+                .profileImageUrl(user.getProfileImageUrl())
                 .role(user.getRole())
+                .active(user.getActive())
+                .createdAt(user.getCreatedAt())
+                .updatedAt(user.getUpdatedAt())
                 .build();
     }
 }

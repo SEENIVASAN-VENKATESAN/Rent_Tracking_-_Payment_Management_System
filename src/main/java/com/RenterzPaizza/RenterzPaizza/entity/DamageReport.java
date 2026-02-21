@@ -1,43 +1,49 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
-import com.RenterzPaizza.RenterzPaizza.entity.enums.WorkFlowStatus;
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
+import com.RenterzPaizza.RenterzPaizza.entity.enums.DamageStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "damage_report")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class DamageReport {
+public class DamageReport extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long damageId;           // primary key
+    private Long damageId;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")
-    private Unit unit;               // damaged unit
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;               // responsible user
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    private String beforeImage;      // before stay image
+    @Column(nullable = false)
+    private String description;
 
-    private String afterImage;       // after leaving image
+    private String beforeImage;
 
-    private Double estimatedCost;    // damage cost
+    private String afterImage;
+
+    @Column(nullable = false, precision = 12, scale = 2)
+    private BigDecimal estimatedCost;
 
     @Enumerated(EnumType.STRING)
-    private WorkFlowStatus status;   // OPEN / PAID
+    @Column(nullable = false)
+    @Builder.Default
+    private DamageStatus status = DamageStatus.OPEN;
 
-    private LocalDateTime createdAt; // report created time
-
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean billed = false;
 }
-

@@ -1,49 +1,46 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.EntityStatus;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.OccupancyType;
 import jakarta.persistence.*;
 import lombok.*;
 
-
-import javax.management.relation.Relation;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "unit_allocation")
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class UnitAllocation {
+public class UnitAllocation extends AuditableSoftDeleteEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long allocationId;      // primary key
+    private Long allocationId;
 
-    @ManyToOne
-    @JoinColumn(name = "unit_id")
-    private Unit unit;              // allocated unit
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "unit_id", nullable = false)
+    private Unit unit;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User tenant;              // owner / tenant
-
-    @Enumerated(EnumType.STRING)
-    private OccupancyType occupancyType; //(RENT / LEASE) // OWNER / TENANT / LEASE
-
-    private LocalDate startDate;    // allocation start
-
-    private LocalDate endDate;      // allocation end
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User tenant;
 
     @Enumerated(EnumType.STRING)
-    private EntityStatus status;    //ACTIVE,INACTIVE,TERMINATED
+    @Column(nullable = false)
+    private OccupancyType occupancyType;
 
-    private LocalDateTime createdAt;// allocation created time
+    @Column(nullable = false)
+    private LocalDate startDate;
 
+    @Column(nullable = false)
+    private LocalDate endDate;
 
-
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private EntityStatus status = EntityStatus.ACTIVE;
 }
-

@@ -4,7 +4,6 @@ import com.RenterzPaizza.RenterzPaizza.entity.Communication;
 import com.RenterzPaizza.RenterzPaizza.entity.User;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.CommunicationStatus;
 import com.RenterzPaizza.RenterzPaizza.repository.CommunicationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -13,61 +12,42 @@ import java.util.List;
 @Service
 public class CommunicationSenderScheduler {
 
-    @Autowired
-    private CommunicationRepository communicationRepository;
+    private final CommunicationRepository communicationRepository;
+    private final SmsSender smsSender;
+    private final WhatsAppSender whatsAppSender;
+    private final VoiceSender voiceSender;
+    private final EmailSender emailSender;
 
-    @Autowired
-    private SmsSender smsSender;
+    public CommunicationSenderScheduler(CommunicationRepository communicationRepository,
+                                        SmsSender smsSender,
+                                        WhatsAppSender whatsAppSender,
+                                        VoiceSender voiceSender,
+                                        EmailSender emailSender) {
+        this.communicationRepository = communicationRepository;
+        this.smsSender = smsSender;
+        this.whatsAppSender = whatsAppSender;
+        this.voiceSender = voiceSender;
+        this.emailSender = emailSender;
+    }
 
-    @Autowired
-    private VoiceSender voiceSender;
-
-    @Autowired
-    private EmailSender emailSender;
-
-    // Runs every 1 minute
     @Scheduled(fixedRate = 60000)
     public void processPendingCommunications() {
+        List<Communication> pending = communicationRepository.findByStatusAndDeletedFalse(CommunicationStatus.PENDING);
 
-        List<Communication> pending =
-                communicationRepository.findByStatus(
-                        CommunicationStatus.PENDING);
-
-        for (Communication comm : pending) {
-
+        for (Communication communication : pending) {
             boolean success = false;
+            User user = communication.getUser();
 
-            User user = comm.getUser();
-
-            switch (comm.getChannel()) {
-
-                case SMS:
-                    success = smsSender.send(
-                            user.getMobile(),
-                            comm.getMessage());
-                    break;
-
-                case VOICE:
-                    success = voiceSender.send(
-                            user.getMobile(),
-                            comm.getMessage());
-                    break;
-
-                case EMAIL:
-                    success = emailSender.send(
-                            user.getEmail(),
-                            comm.getMessage());
-                    break;
+            switch (communication.getChannel()) {
+                case SMS -> success = smsSender.send(communication.getCommunicationId(), user.getMobile(), communication.getMessage());
+                case WHATSAPP -> success = whatsAppSender.send(communication.getCommunicationId(), user.getMobile(), communication.getMessage());
+                case VOICE -> success = voiceSender.send(communication.getCommunicationId(), user.getMobile(), communication.getMessage());
+                case EMAIL -> success = emailSender.send(user.getEmail(), communication.getMessage());
+                default -> success = false;
             }
 
-            comm.setStatus(
-                    success ?
-                            CommunicationStatus.SENT :
-                            CommunicationStatus.FAILED
-            );
-
-            communicationRepository.save(comm);
+            communication.setStatus(success ? CommunicationStatus.SENT : CommunicationStatus.FAILED);
+            communicationRepository.save(communication);
         }
     }
 }
-

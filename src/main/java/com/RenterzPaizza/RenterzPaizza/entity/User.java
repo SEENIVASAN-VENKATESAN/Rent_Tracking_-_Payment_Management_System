@@ -1,36 +1,43 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-
 
 @Entity
-@Table(name = "users")   // stores all system users
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+@Table(name = "users")
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class  User {
+public class User extends AuditableSoftDeleteEntity {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment primary key
-        private Long userId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
 
-        private String name; // user full name
+    @Column(nullable = false)
+    private String name;
 
-        @Column(unique = true)
-        private String email; // login + email notification
+    @Column(nullable = false, unique = true)
+    private String email;
 
-        @Column(unique = true)
-        private String mobile; // SMS / WhatsApp / voice call
+    @Column(nullable = false, unique = true)
+    private String mobile;
 
-        private String password; // encrypted password
+    @Column(nullable = false)
+    private String password;
 
-        @Enumerated(EnumType.STRING)
-        private Role role; // ADMIN, OWNER, TENANT
+    @Column(length = 2048)
+    private String profileImageUrl;
 
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
+
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean active = true;
+}

@@ -1,10 +1,17 @@
 package com.RenterzPaizza.RenterzPaizza.dto;
 
-import lombok.Data;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class LoginRequest {
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email format is invalid")
+    private String email;
 
-    private String email;     // email entered by user
-    private String password;  // plain password from request
+    @NotBlank(message = "Password is required")
+    private String password;
 }

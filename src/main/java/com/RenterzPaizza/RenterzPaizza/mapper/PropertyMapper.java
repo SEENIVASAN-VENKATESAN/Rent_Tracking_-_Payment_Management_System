@@ -3,29 +3,33 @@ package com.RenterzPaizza.RenterzPaizza.mapper;
 import com.RenterzPaizza.RenterzPaizza.dto.PropertyRequest;
 import com.RenterzPaizza.RenterzPaizza.dto.PropertyResponse;
 import com.RenterzPaizza.RenterzPaizza.entity.Property;
+import com.RenterzPaizza.RenterzPaizza.entity.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PropertyMapper {
 
-    public Property toEntity(PropertyRequest dto) {
-
+    public Property toEntity(PropertyRequest request, User admin) {
         return Property.builder()
-                .propertyName(dto.getPropertyName())
-                .propertyType(dto.getPropertyType())
-                .address(dto.getAddress())
-                .city(dto.getCity())
+                .propertyName(request.getPropertyName())
+                .propertyType(request.getPropertyType())
+                .address(request.getAddress())
+                .city(request.getCity())
+                .admin(admin)
                 .build();
     }
 
-    public PropertyResponse toResponse(Property entity) {
-
+    public PropertyResponse toResponse(Property property) {
         return PropertyResponse.builder()
-                .propertyId(entity.getPropertyId())
-                .propertyName(entity.getPropertyName())
-                .propertyType(String.valueOf(entity.getPropertyType()))
-                .address(entity.getAddress())
-                .city(entity.getCity())
+                .propertyId(property.getPropertyId())
+                .propertyName(property.getPropertyName())
+                .propertyType(property.getPropertyType().name())
+                .address(property.getAddress())
+                .city(property.getCity())
+                .status(property.getStatus())
+                .adminId(property.getAdmin().getUserId())
+                .createdAt(property.getCreatedAt())
+                .updatedAt(property.getUpdatedAt())
                 .build();
     }
 }

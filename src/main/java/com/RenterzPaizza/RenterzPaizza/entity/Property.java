@@ -1,38 +1,43 @@
 package com.RenterzPaizza.RenterzPaizza.entity;
 
+import com.RenterzPaizza.RenterzPaizza.entity.base.AuditableSoftDeleteEntity;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.EntityStatus;
 import com.RenterzPaizza.RenterzPaizza.entity.enums.PropertyType;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
-@Table(name = "property") // main property table
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
+@Table(name = "property")
 @Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class Property {
+public class Property extends AuditableSoftDeleteEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // property unique id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long propertyId;
 
-    private String propertyName; // apartment / pg name
+    @Column(nullable = false)
+    private String propertyName;
 
     @Enumerated(EnumType.STRING)
-    private PropertyType propertyType; // APARTMENT / PG / BUILDING
+    @Column(nullable = false)
+    private PropertyType propertyType;
 
-    private String address; // full address
+    @Column(nullable = false)
+    private String address;
 
-    private String city; // city name
+    @Column(nullable = false)
+    private String city;
 
     @Enumerated(EnumType.STRING)
-    private EntityStatus status;
+    @Column(nullable = false)
+    @Builder.Default
+    private EntityStatus status = EntityStatus.ACTIVE;
 
-    @ManyToOne
-    @JoinColumn(name = "admin_id") // property managed by admin
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "admin_id", nullable = false)
     private User admin;
-
 }
